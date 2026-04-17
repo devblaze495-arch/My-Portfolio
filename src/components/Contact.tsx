@@ -80,8 +80,15 @@ function Contact() {
         }}
       />
 
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <div
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{ position: 'relative', zIndex: 1 }}
+      >
+        <motion.div
+          transition={{ delay: 0 * 0.1 }}
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '13px',
@@ -90,9 +97,10 @@ function Contact() {
           }}
         >
           $ ./contact --init
-        </div>
+        </motion.div>
 
-        <h2
+        <motion.h2
+          transition={{ delay: 1 * 0.1 }}
           style={{
             fontSize: 'clamp(32px,5vw,52px)',
             fontWeight: 900,
@@ -104,9 +112,10 @@ function Contact() {
         >
           {"Let's Build "}
           <span style={{ color: '#00FF80' }}>Together</span>
-        </h2>
+        </motion.h2>
 
-        <p
+        <motion.p
+          transition={{ delay: 2 * 0.1 }}
           style={{
             fontSize: '16px',
             color: 'rgba(255,255,255,0.35)',
@@ -115,9 +124,10 @@ function Contact() {
           }}
         >
           // open to freelance projects & collaborations
-        </p>
+        </motion.p>
 
-        <div
+        <motion.div
+          transition={{ delay: 3 * 0.1 }}
           style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
@@ -448,9 +458,10 @@ function Contact() {
               )}
             </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
 
-        <footer
+        <motion.footer
+          transition={{ delay: 4 * 0.1 }}
           style={{
             marginTop: '120px',
             paddingTop: '40px',
@@ -489,8 +500,8 @@ function Contact() {
           >
             Panvel, Mumbai IN
           </span>
-        </footer>
-      </div>
+        </motion.footer>
+      </motion.div>
     </section>
   )
 }

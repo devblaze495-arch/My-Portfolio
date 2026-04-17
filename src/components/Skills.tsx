@@ -77,7 +77,7 @@ function Skills() {
   return (
     <>
       <section
-        id="about"
+        id="skills"
         ref={sectionRef}
         style={{
           background: '#050505',
@@ -108,8 +108,15 @@ function Skills() {
           )}
         </AnimatePresence>
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ position: 'relative', zIndex: 1 }}
+        >
+          <motion.div
+            transition={{ delay: 0 * 0.1 }}
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '13px',
@@ -118,9 +125,10 @@ function Skills() {
             }}
           >
             $ cat ./skills.json
-          </div>
+          </motion.div>
 
-          <h2
+          <motion.h2
+            transition={{ delay: 1 * 0.1 }}
             style={{
               fontSize: 'clamp(32px,5vw,52px)',
               fontWeight: 900,
@@ -131,9 +139,10 @@ function Skills() {
             }}
           >
             Skills &amp; Stack
-          </h2>
+          </motion.h2>
 
-          <div
+          <motion.div
+            transition={{ delay: 2 * 0.1 }}
             style={{
               display: 'grid',
               gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
@@ -293,8 +302,8 @@ function Skills() {
                 })}
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
       <footer
         style={{

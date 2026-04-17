@@ -1,8 +1,13 @@
 import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
 
 const navLinks = ['Home', 'About', 'Projects', 'Contact']
 
 function Navbar() {
+  const [btnX, setBtnX] = useState(0)
+  const [btnY, setBtnY] = useState(0)
+  const btnRef = useRef<HTMLButtonElement | null>(null)
+
   return (
     <motion.nav
       initial={{ y: -60, opacity: 0 }}
@@ -72,28 +77,46 @@ function Navbar() {
         ))}
       </div>
 
-      <motion.button
-        whileHover={{
-          background: 'rgba(0,255,128,0.1)',
-          boxShadow: '0 0 25px rgba(0,255,128,0.3)',
-        }}
-        whileTap={{ scale: 0.97 }}
-        style={{
-          background: 'transparent',
-          border: '1px solid #00FF80',
-          color: '#00FF80',
-          padding: '8px 20px',
-          borderRadius: '6px',
-          fontSize: '13px',
-          fontWeight: 700,
-          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-          letterSpacing: '1px',
-          cursor: 'pointer',
-          boxShadow: '0 0 15px rgba(0,255,128,0.15)',
-        }}
+      <motion.div
+        animate={{ x: btnX, y: btnY }}
+        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
       >
-        HIRE ME
-      </motion.button>
+        <motion.button
+          ref={btnRef}
+          onMouseMove={(e) => {
+            if (!btnRef.current) return
+            const rect = btnRef.current.getBoundingClientRect()
+            const x = e.clientX - rect.left - rect.width / 2
+            const y = e.clientY - rect.top - rect.height / 2
+            setBtnX(x * 0.3)
+            setBtnY(y * 0.3)
+          }}
+          onMouseLeave={() => {
+            setBtnX(0)
+            setBtnY(0)
+          }}
+          whileHover={{
+            background: 'rgba(0,255,128,0.1)',
+            boxShadow: '0 0 25px rgba(0,255,128,0.3)',
+          }}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            background: 'transparent',
+            border: '1px solid #00FF80',
+            color: '#00FF80',
+            padding: '8px 20px',
+            borderRadius: '6px',
+            fontSize: '13px',
+            fontWeight: 700,
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            letterSpacing: '1px',
+            cursor: 'pointer',
+            boxShadow: '0 0 15px rgba(0,255,128,0.15)',
+          }}
+        >
+          HIRE ME
+        </motion.button>
+      </motion.div>
     </motion.nav>
   )
 }

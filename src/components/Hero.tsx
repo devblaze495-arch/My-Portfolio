@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 type TerminalLine = {
   text: string
@@ -27,12 +27,13 @@ const techStack = [
 ]
 
 const stats = [
-  { num: '10+', label: 'PROJECTS' },
-  { num: '05+', label: 'CLIENTS' },
-  { num: '02+', label: 'YEARS' },
+  { target: '10', suffix: '+', label: 'PROJECTS' },
+  { target: '5', suffix: '+', label: 'CLIENTS' },
+  { target: '2', suffix: '+', label: 'YEARS' },
 ]
 
 const whoAmIText = '> whoami'
+const roles = ['<FullStackDev />', '<AIBuilder />', '<ProblemSolver />', '<FreelanceAvailable />']
 
 function useWindowWidth() {
   const [width, setWidth] = useState<number>(window.innerWidth)
@@ -46,12 +47,46 @@ function useWindowWidth() {
   return width
 }
 
+function CountUp({ target, suffix }: { target: string; suffix: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLSpanElement | null>(null)
+  const inView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    if (!inView) return
+    let start = 0
+    const end = parseInt(target, 10)
+    const duration = 1500
+    const step = duration / end
+    const timer = window.setInterval(() => {
+      start++
+      setCount(start)
+      if (start >= end) window.clearInterval(timer)
+    }, step)
+    return () => window.clearInterval(timer)
+  }, [inView, target])
+
+  return (
+    <span ref={ref}>
+      {String(count).padStart(2, '0')}
+      {suffix}
+    </span>
+  )
+}
+
 function Hero() {
+  const fullText = 'BHAVESH PATIL'
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const width = useWindowWidth()
   const isMobile = width < 768
-  const isDesktop = width > 1024
 
   const [typedWhoAmI, setTypedWhoAmI] = useState('')
+  const [displayedText, setDisplayedText] = useState('')
+  const [charIndex, setCharIndex] = useState(0)
+  const [showCursor, setShowCursor] = useState(true)
+  const [roleIndex, setRoleIndex] = useState(0)
+  const [typedRole, setTypedRole] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
   const [visibleLines, setVisibleLines] = useState(0)
 
   useEffect(() => {
@@ -68,6 +103,97 @@ function Hero() {
 
     return () => {
       window.clearTimeout(delayId)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (charIndex < fullText.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + fullText[charIndex])
+        setCharIndex((prev) => prev + 1)
+      }, 80)
+      return () => clearTimeout(timeout)
+    }
+  }, [charIndex])
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor((prev) => !prev)
+    }, 500)
+    return () => clearInterval(cursorInterval)
+  }, [])
+
+  useEffect(() => {
+    const currentRole = roles[roleIndex]
+    let timeoutId = 0
+
+    if (!isDeleting) {
+      if (typedRole.length < currentRole.length) {
+        timeoutId = window.setTimeout(() => {
+          setTypedRole(currentRole.slice(0, typedRole.length + 1))
+        }, 80)
+      } else {
+        timeoutId = window.setTimeout(() => setIsDeleting(true), 2000)
+      }
+    } else if (typedRole.length > 0) {
+      timeoutId = window.setTimeout(() => {
+        setTypedRole(currentRole.slice(0, typedRole.length - 1))
+      }, 40)
+    } else {
+      setIsDeleting(false)
+      setRoleIndex((prev) => (prev + 1) % roles.length)
+    }
+
+    return () => window.clearTimeout(timeoutId)
+  }, [isDeleting, roleIndex, typedRole])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+  
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    let mouseX = -9999
+    let mouseY = -9999
+
+    const handleMouse = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      mouseX = e.clientX - rect.left
+      mouseY = e.clientY - rect.top
+    }
+    window.addEventListener('mousemove', handleMouse)
+
+    let animId: number
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const spacing = 40
+      for (let x = 0; x < canvas.width; x += spacing) {
+        for (let y = 0; y < canvas.height; y += spacing) {
+          const dist = Math.sqrt((x - mouseX) ** 2 + (y - mouseY) ** 2)
+          const radius = dist < 120 ? 3 : 1
+          const alpha = dist < 120 ? 0.6 : 0.12
+
+          ctx.beginPath()
+          ctx.arc(x, y, radius, 0, Math.PI * 2)
+          ctx.fillStyle = `rgba(0,255,128,${alpha})`
+          ctx.fill()
+        }
+      }
+      animId = requestAnimationFrame(draw)
+    }
+    draw()
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', handleMouse)
     }
   }, [])
 
@@ -99,6 +225,35 @@ function Hero() {
         overflow: 'hidden',
       }}
     >
+      <style>
+        {`
+          @keyframes glitch1 {
+            0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0) }
+            20% { clip-path: inset(10% 0 70% 0); transform: translate(-3px, 1px) }
+            40% { clip-path: inset(50% 0 30% 0); transform: translate(3px, -1px) }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px) }
+            80% { clip-path: inset(30% 0 60% 0); transform: translate(2px, -2px) }
+          }
+          @keyframes glitch2 {
+            0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0) }
+            20% { clip-path: inset(60% 0 20% 0); transform: translate(3px, -1px) }
+            50% { clip-path: inset(20% 0 65% 0); transform: translate(-3px, 1px) }
+            70% { clip-path: inset(85% 0 5% 0); transform: translate(2px, 2px) }
+          }
+        `}
+      </style>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
       <div
         style={{
           position: 'absolute',
@@ -151,17 +306,22 @@ function Hero() {
         }}
       />
 
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         style={{
           position: 'relative',
           zIndex: 1,
           display: 'flex',
           flexDirection: 'column',
-          padding: isMobile ? '120px 5% 56px' : '140px 6% 80px',
+          padding: isMobile ? '100px 6% 60px' : '140px 6% 80px',
           maxWidth: '900px',
         }}
       >
-        <div
+        <motion.div
+          transition={{ delay: 0 * 0.1 }}
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '14px',
@@ -183,43 +343,49 @@ function Hero() {
             }}
           />
           <span>{typedWhoAmI}</span>
-        </div>
+        </motion.div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <motion.span
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.7 }}
+        <motion.div style={{ marginBottom: '16px' }} transition={{ delay: 1 * 0.1 }}>
+          <div
             style={{
-              fontSize: isMobile ? '52px' : 'clamp(52px, 8vw, 96px)',
+              fontSize: 'clamp(52px, 8vw, 96px)',
               fontWeight: 900,
-              color: '#ffffff',
+              lineHeight: 1.05,
               letterSpacing: '-3px',
-              lineHeight: 1,
-              display: 'block',
+              marginBottom: 16,
             }}
           >
-            BHAVESH
-          </motion.span>
-          <motion.span
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.7 }}
-            style={{
-              fontSize: isMobile ? '52px' : 'clamp(52px, 8vw, 96px)',
-              fontWeight: 900,
-              letterSpacing: '-3px',
-              lineHeight: 1,
-              display: 'block',
-              color: '#00FF80',
-              textShadow: '0 0 40px rgba(0,255,128,0.5), 0 0 80px rgba(0,255,128,0.2)',
-            }}
-          >
-            PATIL_
-          </motion.span>
-        </div>
+            {displayedText.split('').map((char, i) => (
+              <span
+                key={i}
+                style={{
+                  color: i < 7 ? '#ffffff' : '#00FF80',
+                  textShadow:
+                    i >= 7
+                      ? '0 0 40px rgba(0,255,128,0.5), 0 0 80px rgba(0,255,128,0.2)'
+                      : 'none',
+                  display: 'inline',
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
+            <span
+              style={{
+                color: '#00FF80',
+                opacity: showCursor ? 1 : 0,
+                textShadow: '0 0 40px rgba(0,255,128,0.5)',
+                transition: 'opacity 0.1s',
+                display: 'inline',
+              }}
+            >
+              _
+            </span>
+          </div>
+        </motion.div>
 
-        <div
+        <motion.div
+          transition={{ delay: 2 * 0.1 }}
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '18px',
@@ -238,19 +404,22 @@ function Hero() {
               background: 'linear-gradient(90deg, #00FF80, transparent)',
             }}
           />
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
-          >
-            {'<FullStackDev />'}
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
+            {typedRole}
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+              style={{ color: '#00FF80', marginLeft: '2px' }}
+            >
+              |
+            </motion.span>
           </motion.span>
-        </div>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 1.5 + 3 * 0.1 }}
           style={{
             fontSize: '16px',
             color: 'rgba(255,255,255,0.4)',
@@ -264,7 +433,8 @@ function Hero() {
           {'Building high-performance web apps and AI-powered\ntools from Panvel, Mumbai. 10+ projects shipped,\n5+ happy clients.'}
         </motion.p>
 
-        <div
+        <motion.div
+          transition={{ delay: 4 * 0.1 }}
           style={{
             display: 'flex',
             gap: '14px',
@@ -275,6 +445,19 @@ function Hero() {
           }}
         >
           <motion.button
+            onMouseEnter={() => {
+              const ctx = new AudioContext()
+              const osc = ctx.createOscillator()
+              const gain = ctx.createGain()
+              osc.connect(gain)
+              gain.connect(ctx.destination)
+              osc.frequency.value = 800
+              osc.type = 'sine'
+              gain.gain.setValueAtTime(0.05, ctx.currentTime)
+              gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
+              osc.start()
+              osc.stop(ctx.currentTime + 0.1)
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.7 }}
@@ -307,6 +490,19 @@ function Hero() {
           </motion.button>
 
           <motion.button
+            onMouseEnter={() => {
+              const ctx = new AudioContext()
+              const osc = ctx.createOscillator()
+              const gain = ctx.createGain()
+              osc.connect(gain)
+              gain.connect(ctx.destination)
+              osc.frequency.value = 800
+              osc.type = 'sine'
+              gain.gain.setValueAtTime(0.05, ctx.currentTime)
+              gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
+              osc.start()
+              osc.stop(ctx.currentTime + 0.1)
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.8 }}
@@ -332,9 +528,10 @@ function Hero() {
           >
             ./contact_me
           </motion.button>
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
+          transition={{ delay: 5 * 0.1 }}
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             display: 'flex',
@@ -372,12 +569,13 @@ function Hero() {
               )}
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
+          transition={{ delay: 6 * 0.1 }}
           style={{
             display: 'flex',
-            gap: 0,
+            gap: isMobile ? '24px' : 0,
             paddingTop: '40px',
             borderTop: '1px solid rgba(0,255,128,0.08)',
             flexWrap: isMobile ? 'wrap' : 'nowrap',
@@ -409,7 +607,7 @@ function Hero() {
                   textShadow: '0 0 20px rgba(0,255,128,0.4)',
                 }}
               >
-                {stat.num}
+                <CountUp target={stat.target} suffix={stat.suffix} />
               </div>
               <div
                 style={{
@@ -425,11 +623,11 @@ function Hero() {
               </div>
             </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <AnimatePresence>
-        {isDesktop && (
+        {!isMobile && (
           <motion.div
             initial={{ x: 80, opacity: 0 }}
             animate={{ x: 0, opacity: 1, y: [-5, 5, -5] }}
