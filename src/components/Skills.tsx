@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import type { Transition } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 const skills = [
@@ -31,36 +32,36 @@ function getIconAnimation(animation: TechAnimation) {
   if (animation === 'snake') {
     return {
       animate: { rotate: [0, 10, -10, 10, 0], y: [0, -4, 4, -4, 0] },
-      transition: { duration: 2, repeat: Infinity as const },
+      transition: { duration: 2, repeat: Infinity } as Transition,
     }
   }
   if (animation === 'orbit') {
     return {
       animate: { rotate: [0, 360] },
-      transition: { duration: 8, repeat: Infinity as const, ease: 'linear' as const },
+      transition: { duration: 8, repeat: Infinity, ease: 'linear' } as Transition,
     }
   }
   if (animation === 'pulse') {
     return {
       animate: { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] },
-      transition: { duration: 1.5, repeat: Infinity as const },
+      transition: { duration: 1.5, repeat: Infinity } as Transition,
     }
   }
   if (animation === 'float') {
     return {
       animate: { y: [0, -8, 0] },
-      transition: { duration: 2, repeat: Infinity as const, ease: 'easeInOut' as const },
+      transition: { duration: 2, repeat: Infinity, ease: 'easeInOut' } as Transition,
     }
   }
   if (animation === 'bounce') {
     return {
       animate: { y: [0, -12, 0] },
-      transition: { duration: 0.8, repeat: Infinity as const, ease: 'easeInOut' as const },
+      transition: { duration: 0.8, repeat: Infinity, ease: 'easeInOut' } as Transition,
     }
   }
   return {
     animate: { opacity: [1, 0.3, 1], scale: [1, 1.1, 1] },
-    transition: { duration: 1.2, repeat: Infinity as const },
+    transition: { duration: 1.2, repeat: Infinity } as Transition,
   }
 }
 

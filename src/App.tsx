@@ -22,7 +22,7 @@ function App() {
     'a',
   ]
   const [progress, setProgress] = useState(0)
-  const [keys, setKeys] = useState<string[]>([])
+  const keySequenceRef = useRef<string[]>([])
   const [activated, setActivated] = useState(false)
   const timeoutRef = useRef<number | null>(null)
 
@@ -46,15 +46,13 @@ function App() {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const key = event.key.length === 1 ? event.key.toLowerCase() : event.key
-      setKeys((prev) => {
-        const next = [...prev, key].slice(-10)
-        if (next.join(',') === sequence.join(',')) {
-          setActivated(true)
-          if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
-          timeoutRef.current = window.setTimeout(() => setActivated(false), 3000)
-        }
-        return next
-      })
+      const next = [...keySequenceRef.current, key].slice(-10)
+      keySequenceRef.current = next
+      if (next.join(',') === sequence.join(',')) {
+        setActivated(true)
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current)
+        timeoutRef.current = window.setTimeout(() => setActivated(false), 3000)
+      }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
