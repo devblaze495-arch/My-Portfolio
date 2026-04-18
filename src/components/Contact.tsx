@@ -9,7 +9,7 @@ type ContactItem = {
 }
 
 const contactItems: ContactItem[] = [
-  { icon: '📧', label: 'EMAIL', value: 'bhavesh1209p@gmial.com' },
+  { icon: '📧', label: 'EMAIL', value: 'bhavesh1209p@gmail.com' },
   { icon: '📱', label: 'WHATSAPP', value: '8369808262' },
   { icon: '📍', label: 'LOCATION', value: 'Panvel, Navi Mumbai' },
 ]
