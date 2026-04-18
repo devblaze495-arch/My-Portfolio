@@ -210,7 +210,7 @@ function Contact() {
                     window.open(
                       social === 'GitHub'
                         ? 'https://github.com/devblaze495-arch'
-                        : 'https://www.linkedin.com/in/bhavesh-patil',
+                        : 'https://www.linkedin.com/in/bhavesh-patil-a207643ab/',
                       '_blank',
                       'noopener,noreferrer',
                     )
