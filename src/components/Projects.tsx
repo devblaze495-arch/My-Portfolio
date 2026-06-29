@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import SpotlightCard from './SpotlightCard/SpotlightCard'
 
 type Project = {
   id: number
@@ -70,7 +71,6 @@ const projects: Project[] = [
 
 function Projects() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-  const [tilts, setTilts] = useState<Record<number, { x: number; y: number }>>({})
   const [hoveredId, setHoveredId] = useState<number | null>(null)
   const [previewX, setPreviewX] = useState(0)
   const [previewY, setPreviewY] = useState(0)
@@ -91,15 +91,6 @@ function Projects() {
         overflow: 'hidden',
       }}
     >
-      <style>
-        {`
-          @keyframes borderGlow {
-            0% { background-position: 0% 50% }
-            50% { background-position: 100% 50% }
-            100% { background-position: 0% 50% }
-          }
-        `}
-      </style>
       <div
         style={{
           position: 'absolute',
@@ -191,79 +182,35 @@ function Projects() {
         }}
       >
         {projects.map((project, index) => (
-          <div
+          <motion.div
             key={project.id}
-            style={{
-              position: 'relative',
-              padding: '1px',
-              borderRadius: '13px',
-              background:
-                hoveredId === project.id
-                  ? 'linear-gradient(90deg, #00FF80, rgba(0,255,128,0.2), #00FF80)'
-                  : 'transparent',
-              backgroundSize: '200% 200%',
-              animation: hoveredId === project.id ? 'borderGlow 2s linear infinite' : 'none',
-            }}
-          >
-            <motion.article
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{
-              delay: index * 0.1,
-              duration: 0.5,
-              type: 'spring',
-              stiffness: 300,
-              damping: 20,
-            }}
-            onMouseMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect()
-              const x = (e.clientX - rect.left) / rect.width - 0.5
-              const y = (e.clientY - rect.top) / rect.height - 0.5
-              setTilts((prev) => ({ ...prev, [project.id]: { x: y * 12, y: x * -12 } }))
-              setPreviewX(e.clientX)
-              setPreviewY(e.clientY)
-            }}
-            onMouseEnter={() => setHoveredId(project.id)}
-            onMouseLeave={() => {
-              setTilts((prev) => ({ ...prev, [project.id]: { x: 0, y: 0 } }))
-              setHoveredId(null)
-            }}
-            animate={{
-              rotateX: tilts[project.id]?.x || 0,
-              rotateY: tilts[project.id]?.y || 0,
-            }}
-            whileHover={{
-              borderColor: 'rgba(0,255,128,0.3)',
-              background: 'rgba(0,255,128,0.04)',
-              y: -4,
-            }}
-            style={{
-              position: 'relative',
-              overflow: 'hidden',
-              background: 'rgba(0,255,128,0.02)',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '28px',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              transformStyle: 'preserve-3d',
-              perspective: '1000px',
-            }}
+            transition={{ delay: index * 0.1, duration: 0.5, type: 'spring', stiffness: 300, damping: 20 }}
           >
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileHover={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '1px',
-                background: `linear-gradient(90deg, transparent, ${project.color}, transparent)`,
+            <SpotlightCard
+              spotlightColor="rgba(0, 255, 128, 0.12)"
+              className="project-card"
+              onMouseEnter={() => setHoveredId(project.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              onMouseMove={(e) => {
+                setPreviewX(e.clientX)
+                setPreviewY(e.clientY)
               }}
-            />
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '1px',
+                  background: `linear-gradient(90deg, transparent, ${project.color}, transparent)`,
+                  opacity: hoveredId === project.id ? 1 : 0,
+                  transition: 'opacity 0.3s',
+                }}
+              />
 
             <div
               style={{
@@ -353,29 +300,28 @@ function Projects() {
               ))}
             </div>
 
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingTop: '20px',
-                borderTop: '1px solid rgba(255,255,255,0.04)',
-              }}
-            >
-              <motion.span
-                whileHover={{ color: '#00FF80', x: 4 }}
+              <div
                 style={{
-                  fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                  fontSize: '12px',
-                  color: 'rgba(0,255,128,0.5)',
                   display: 'flex',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  gap: '6px',
-                  cursor: 'pointer',
+                  paddingTop: '20px',
+                  borderTop: '1px solid rgba(255,255,255,0.04)',
                 }}
               >
-                → view_project
-              </motion.span>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                    fontSize: '12px',
+                    color: 'rgba(0,255,128,0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  → view_project
+                </span>
               <span
                 style={{
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
@@ -385,9 +331,9 @@ function Projects() {
               >
                 {`0${index + 1}`}
               </span>
-            </div>
-            </motion.article>
-          </div>
+              </div>
+            </SpotlightCard>
+          </motion.div>
         ))}
       </motion.div>
 
