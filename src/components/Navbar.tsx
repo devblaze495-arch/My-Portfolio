@@ -1,9 +1,16 @@
 import { motion } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 
-const navLinks = ['Home', 'About', 'Projects', 'Contact']
+const navLinks = [
+  { label: 'Home', path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Contact', path: '/contact' },
+]
 
 function Navbar() {
+  const navigate = useNavigate()
   const [btnX, setBtnX] = useState(0)
   const [btnY, setBtnY] = useState(0)
   const btnRef = useRef<HTMLButtonElement | null>(null)
@@ -29,18 +36,23 @@ function Navbar() {
         padding: '0 6%',
       }}
     >
-      <motion.div
-        animate={{ opacity: [1, 0, 1] }}
-        transition={{ duration: 1, repeat: Infinity }}
+      <NavLink
+        to="/"
         style={{
           fontFamily: "'JetBrains Mono', ui-monospace, monospace",
           fontSize: '18px',
           fontWeight: 700,
           color: '#00FF80',
+          textDecoration: 'none',
         }}
       >
-        {'> BP_'}
-      </motion.div>
+        <motion.span
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ duration: 1, repeat: Infinity }}
+        >
+          {'> BP_'}
+        </motion.span>
+      </NavLink>
 
       <div
         style={{
@@ -52,28 +64,34 @@ function Navbar() {
         }}
       >
         {navLinks.map((link) => (
-          <motion.a
-            key={link}
-            href={`#${link.toLowerCase()}`}
-            whileHover={{
-              color: '#00FF80',
-              background: 'rgba(0,255,128,0.06)',
-              borderColor: 'rgba(0,255,128,0.15)',
-            }}
-            transition={{ duration: 0.2 }}
-            style={{
+          <NavLink
+            key={link.path}
+            to={link.path}
+            end={link.path === '/'}
+            style={({ isActive }) => ({
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '13px',
-              color: 'rgba(255,255,255,0.4)',
+              color: isActive ? '#00FF80' : 'rgba(255,255,255,0.4)',
               textDecoration: 'none',
               padding: '6px 14px',
               borderRadius: '4px',
               letterSpacing: '1px',
-              border: '1px solid transparent',
-            }}
+              border: isActive
+                ? '1px solid rgba(0,255,128,0.15)'
+                : '1px solid transparent',
+              background: isActive ? 'rgba(0,255,128,0.06)' : 'transparent',
+              transition: 'all 0.2s ease',
+            })}
           >
-            {link}
-          </motion.a>
+            <motion.span
+              whileHover={{
+                color: '#00FF80',
+              }}
+              style={{ display: 'inline-block' }}
+            >
+              {link.label}
+            </motion.span>
+          </NavLink>
         ))}
       </div>
 
@@ -83,6 +101,7 @@ function Navbar() {
       >
         <motion.button
           ref={btnRef}
+          onClick={() => navigate('/contact')}
           onMouseMove={(e) => {
             if (!btnRef.current) return
             const rect = btnRef.current.getBoundingClientRect()

@@ -11,7 +11,7 @@ type ContactItem = {
 const contactItems: ContactItem[] = [
   { icon: '📧', label: 'EMAIL', value: 'bhavesh1209p@gmail.com' },
   { icon: '📱', label: 'WHATSAPP', value: '8369808262' },
-  { icon: '📍', label: 'LOCATION', value: 'Panvel, Navi Mumbai' },
+  { icon: '📍', label: 'LOCATION', value: ' Mumbai, India' } ,
 ]
 
 function Contact() {
@@ -318,7 +318,7 @@ function Contact() {
                       ref={nameInputRef}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Bhavesh Patil"
+                      placeholder="Your Name"
                       required
                       style={inputStyle}
                       onFocus={(e) => {
@@ -498,7 +498,7 @@ function Contact() {
               color: 'rgba(255,255,255,0.15)',
             }}
           >
-            Panvel, Mumbai IN
+            Mumbai, India
           </span>
         </motion.footer>
       </motion.div>

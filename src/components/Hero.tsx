@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type TerminalLine = {
   text: string
@@ -75,6 +76,7 @@ function CountUp({ target, suffix }: { target: string; suffix: string }) {
 }
 
 function Hero() {
+  const navigate = useNavigate()
   const fullText = 'BHAVESH PATIL'
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const width = useWindowWidth()
@@ -445,6 +447,7 @@ function Hero() {
           }}
         >
           <motion.button
+            onClick={() => navigate('/projects')}
             onMouseEnter={() => {
               const ctx = new AudioContext()
               const osc = ctx.createOscillator()
@@ -490,6 +493,7 @@ function Hero() {
           </motion.button>
 
           <motion.button
+            onClick={() => navigate('/contact')}
             onMouseEnter={() => {
               const ctx = new AudioContext()
               const osc = ctx.createOscillator()

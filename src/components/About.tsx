@@ -44,7 +44,7 @@ function About() {
       transition={{ duration: 0.6 }}
       style={{
         background: '#050505',
-        padding: '80px 6% 40px',
+        padding: '120px 6% 80px',
       }}
     >
       <div
