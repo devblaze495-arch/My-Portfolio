@@ -352,7 +352,7 @@ function Contact() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       type="email"
-                      placeholder="hello@exampe.com"
+                      placeholder="hello@example.com"
                       required
                       style={inputStyle}
                       onFocus={(e) => {
