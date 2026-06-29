@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import type { Transition } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import AnimatedCard from './AnimatedCard'
 
 const skills = [
   { name: 'React / Next.js', level: 90, icon: '⚛' },
@@ -81,7 +82,7 @@ function Skills() {
         id="skills"
         ref={sectionRef}
         style={{
-          background: '#050505',
+          background: 'transparent',
           padding: '120px 6%',
           paddingBottom: '80px',
           position: 'relative',
@@ -102,7 +103,7 @@ function Skills() {
                 width: '800px',
                 height: '400px',
                 borderRadius: '50%',
-                background: 'radial-gradient(ellipse, rgba(0,255,128,0.03), transparent 70%)',
+                background: 'transparent',
                 pointerEvents: 'none',
               }}
             />
@@ -121,7 +122,7 @@ function Skills() {
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '13px',
-              color: 'rgba(0,255,128,0.5)',
+              color: 'rgba(125,160,202,0.5)',
               marginBottom: '16px',
             }}
           >
@@ -129,11 +130,11 @@ function Skills() {
           </motion.div>
 
           <motion.h2
+            className="gradient-heading-text"
             transition={{ delay: 1 * 0.1 }}
             style={{
               fontSize: 'clamp(32px,5vw,52px)',
               fontWeight: 900,
-              color: '#fff',
               letterSpacing: '-2px',
               marginBottom: '64px',
               marginTop: 0,
@@ -155,7 +156,7 @@ function Skills() {
                 style={{
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: '13px',
-                  color: 'rgba(0,255,128,0.4)',
+                  color: 'rgba(125,160,202,0.4)',
                   marginBottom: '32px',
                 }}
               >
@@ -163,7 +164,8 @@ function Skills() {
               </div>
 
               {skills.map((skill, index) => (
-                <div key={skill.name} style={{ marginBottom: '24px' }}>
+                <AnimatedCard key={skill.name}>
+                <div style={{ marginBottom: '24px' }}>
                   <div
                     style={{
                       display: 'flex',
@@ -181,7 +183,7 @@ function Skills() {
                       <span style={{ fontSize: '16px' }}>{skill.icon}</span>
                       <span
                         style={{
-                          color: 'rgba(255,255,255,0.7)',
+                          color: '#5483B3',
                           fontSize: '14px',
                           fontWeight: 600,
                         }}
@@ -193,7 +195,7 @@ function Skills() {
                       style={{
                         fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                         fontSize: '13px',
-                        color: '#00FF80',
+                        color: '#7DA0CA',
                       }}
                     >
                       {`${skill.level}%`}
@@ -202,7 +204,7 @@ function Skills() {
                   <div
                     style={{
                       height: '4px',
-                      background: 'rgba(255,255,255,0.06)',
+                      background: 'transparent',
                       borderRadius: '2px',
                       marginTop: '10px',
                       overflow: 'hidden',
@@ -220,13 +222,13 @@ function Skills() {
                       style={{
                         height: '100%',
                         borderRadius: '2px',
-                        background:
-                          'linear-gradient(90deg, #00FF80, rgba(0,255,128,0.4))',
-                        boxShadow: '0 0 8px rgba(0,255,128,0.4)',
+                        background: 'transparent',
+                        boxShadow: '0 0 8px rgba(125,160,202,0.4)',
                       }}
                     />
                   </div>
                 </div>
+                </AnimatedCard>
               ))}
             </div>
 
@@ -235,7 +237,7 @@ function Skills() {
                 style={{
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: '13px',
-                  color: 'rgba(0,255,128,0.4)',
+                  color: 'rgba(125,160,202,0.4)',
                   marginBottom: '32px',
                 }}
               >
@@ -252,16 +254,17 @@ function Skills() {
                 {techs.map((tech) => {
                   const anim = getIconAnimation(tech.animation)
                   return (
+                    <AnimatedCard key={tech.name}>
                     <motion.div
-                      key={tech.name}
                       whileHover={{
-                        borderColor: 'rgba(0,255,128,0.3)',
-                        background: 'rgba(0,255,128,0.03)',
+                        borderColor: 'rgba(5,38,89,0.3)',
+                        background: 'transparent',
                         scale: 1.05,
                       }}
                       style={{
-                        background: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(255,255,255,0.06)',
+                        background: 'transparent',
+                        border: '1px solid transparent',
+                        borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
                         borderRadius: '12px',
                         padding: '20px',
                         textAlign: 'center',
@@ -281,7 +284,7 @@ function Skills() {
                         style={{
                           fontSize: '13px',
                           fontWeight: 700,
-                          color: 'rgba(255,255,255,0.6)',
+                          color: '#5483B3',
                           fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                           marginTop: '8px',
                         }}
@@ -299,6 +302,7 @@ function Skills() {
                         }}
                       />
                     </motion.div>
+                    </AnimatedCard>
                   )
                 })}
               </div>
@@ -308,8 +312,9 @@ function Skills() {
       </section>
       <footer
         style={{
-          background: '#050505',
-          borderTop: '1px solid rgba(255,255,255,0.04)',
+          background: 'transparent',
+          borderTop: '1px solid transparent',
+          borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
           padding: '32px 6%',
           display: 'flex',
           justifyContent: 'space-between',
@@ -322,7 +327,7 @@ function Skills() {
           style={{
             fontFamily: 'JetBrains Mono',
             fontSize: 12,
-            color: 'rgba(255,255,255,0.2)',
+            color: '#5483B3',
           }}
         >
           {'>'} Bhavesh Patil © 2025
@@ -331,7 +336,7 @@ function Skills() {
           style={{
             fontFamily: 'JetBrains Mono',
             fontSize: 11,
-            color: 'rgba(0,255,128,0.3)',
+            color: 'rgba(125,160,202,0.3)',
           }}
         >
           Built with React + TypeScript
@@ -340,7 +345,7 @@ function Skills() {
           style={{
             fontFamily: 'JetBrains Mono',
             fontSize: 11,
-            color: 'rgba(255,255,255,0.15)',
+            color: '#5483B3',
           }}
         >
           Panvel, Mumbai IN

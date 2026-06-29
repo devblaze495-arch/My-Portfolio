@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
-import CursorGlow from './CursorGlow'
+import SideRays from './SideRays'
 
 const konamiSequence = [
   'ArrowUp',
@@ -67,7 +67,37 @@ function Layout() {
   }, [])
 
   return (
-    <div style={{ background: '#050505', minHeight: '100vh' }}>
+    <div
+      style={{
+        background: '#000000',
+        minHeight: '100vh',
+      }}
+    >
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      >
+        <SideRays
+          speed={2.5}
+          rayColor1="#5483B3"
+          rayColor2="#C1E8FF"
+          intensity={2}
+          spread={2}
+          origin="top-right"
+          tilt={0}
+          saturation={1.5}
+          blend={0.75}
+          falloff={1.6}
+          opacity={0.8}
+        />
+      </div>
       <div
         style={{
           position: 'fixed',
@@ -75,13 +105,12 @@ function Layout() {
           left: 0,
           zIndex: 10000,
           height: '2px',
-          background: 'linear-gradient(90deg, #00FF80, rgba(0,255,128,0.4))',
+          background: 'transparent',
           width: `${progress}%`,
           transition: 'width 0.1s linear',
-          boxShadow: '0 0 8px rgba(0,255,128,0.6)',
+          boxShadow: '0 0 8px rgba(125,160,202,0.6)',
         }}
       />
-      <CursorGlow />
       <Navbar />
       <Outlet />
       <div
@@ -106,7 +135,7 @@ function Layout() {
               position: 'fixed',
               inset: 0,
               zIndex: 99999,
-              background: 'rgba(0,255,128,0.05)',
+              background: 'transparent',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -117,7 +146,7 @@ function Layout() {
           >
             <div
               style={{
-                color: '#00FF80',
+                color: '#7DA0CA',
                 fontSize: '32px',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontWeight: 800,
@@ -127,7 +156,7 @@ function Layout() {
             </div>
             <div
               style={{
-                color: 'rgba(255,255,255,0.6)',
+                color: '#5483B3',
                 fontSize: '18px',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               }}
@@ -136,7 +165,7 @@ function Layout() {
             </div>
             <div
               style={{
-                color: 'rgba(255,255,255,0.7)',
+                color: '#5483B3',
                 fontSize: '16px',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               }}

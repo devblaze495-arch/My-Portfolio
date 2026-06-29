@@ -1,6 +1,6 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
-import type { CSSProperties, FormEvent } from 'react'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import AnimatedCard from './AnimatedCard'
 
 type ContactItem = {
   icon: string
@@ -15,13 +15,18 @@ const contactItems: ContactItem[] = [
 ]
 
 function Contact() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  const [, setName] = useState('')
+  const [, setEmail] = useState('')
+  const [, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-
-  const nameInputRef = useRef<HTMLInputElement | null>(null)
+  const [currentField, setCurrentField] = useState<'name' | 'email' | 'message' | 'done'>('name')
+  const [terminalLines, setTerminalLines] = useState<string[]>([
+    '$ ./contact --init',
+    'Initializing secure connection...',
+    'Connection established.',
+    '---',
+  ])
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768)
@@ -29,38 +34,34 @@ function Contact() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  useEffect(() => {
-    if (!submitted) {
-      nameInputRef.current?.focus()
+  const handleTerminalSubmit = (value: string) => {
+    if (currentField === 'name') {
+      setName(value)
+      setTerminalLines((prev) => [...prev, `> your_name: ${value}`, ''])
+      setCurrentField('email')
+    } else if (currentField === 'email') {
+      setEmail(value)
+      setTerminalLines((prev) => [...prev, `> your_email: ${value}`, ''])
+      setCurrentField('message')
+    } else if (currentField === 'message') {
+      setMessage(value)
+      setTerminalLines((prev) => [
+        ...prev,
+        `> message: ${value}`,
+        '',
+        '$ send_message --now',
+        'Message sent successfully. ✓',
+      ])
+      setCurrentField('done')
+      setSubmitted(true)
     }
-  }, [submitted])
-
-  const inputStyle: CSSProperties = {
-    width: '100%',
-    background: 'rgba(255,255,255,0.02)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '8px',
-    padding: '12px 16px',
-    color: '#fff',
-    fontSize: '14px',
-    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-    outline: 'none',
-    transition: 'all 0.2s ease',
-  }
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setSubmitted(true)
-    setName('')
-    setEmail('')
-    setMessage('')
   }
 
   return (
     <section
       id="contact"
       style={{
-        background: 'linear-gradient(180deg, #050505, #020A05)',
+        background: 'transparent',
         padding: '120px 6%',
         position: 'relative',
         overflow: 'hidden',
@@ -75,7 +76,7 @@ function Contact() {
           width: '600px',
           height: '400px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(0,255,128,0.06), transparent 70%)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}
       />
@@ -92,7 +93,7 @@ function Contact() {
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '13px',
-            color: 'rgba(0,255,128,0.5)',
+            color: 'rgba(125,160,202,0.5)',
             marginBottom: '16px',
           }}
         >
@@ -100,25 +101,25 @@ function Contact() {
         </motion.div>
 
         <motion.h2
+          className="gradient-heading-text"
           transition={{ delay: 1 * 0.1 }}
           style={{
             fontSize: 'clamp(32px,5vw,52px)',
             fontWeight: 900,
-            color: '#fff',
             letterSpacing: '-2px',
             marginBottom: '16px',
             marginTop: 0,
           }}
         >
           {"Let's Build "}
-          <span style={{ color: '#00FF80' }}>Together</span>
+          <span className="gradient-heading-text">Together</span>
         </motion.h2>
 
         <motion.p
           transition={{ delay: 2 * 0.1 }}
           style={{
             fontSize: '16px',
-            color: 'rgba(255,255,255,0.35)',
+            color: '#5483B3',
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             marginBottom: '64px',
           }}
@@ -137,19 +138,20 @@ function Contact() {
         >
           <div>
             {contactItems.map((item) => (
+              <AnimatedCard key={item.label}>
               <motion.div
-                key={item.label}
                 whileHover={{
-                  borderColor: 'rgba(0,255,128,0.25)',
+                  borderColor: 'rgba(5,38,89,0.25)',
                   x: 6,
-                  background: 'rgba(0,255,128,0.04)',
+                  background: 'transparent',
                 }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
-                  background: 'rgba(0,255,128,0.02)',
-                  border: '1px solid rgba(0,255,128,0.08)',
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                  borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
                   borderRadius: '12px',
                   padding: '20px',
                   marginBottom: '16px',
@@ -161,8 +163,9 @@ function Contact() {
                     width: '44px',
                     height: '44px',
                     borderRadius: '8px',
-                    background: 'rgba(0,255,128,0.08)',
-                    border: '1px solid rgba(0,255,128,0.15)',
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                    borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -176,7 +179,7 @@ function Contact() {
                     style={{
                       fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                       fontSize: '11px',
-                      color: 'rgba(0,255,128,0.5)',
+                      color: 'rgba(125,160,202,0.5)',
                       letterSpacing: '1px',
                       marginBottom: '4px',
                     }}
@@ -187,15 +190,17 @@ function Contact() {
                     style={{
                       fontSize: '14px',
                       fontWeight: 600,
-                      color: 'rgba(255,255,255,0.7)',
+                      color: '#5483B3',
                     }}
                   >
                     {item.value}
                   </div>
                 </div>
               </motion.div>
+              </AnimatedCard>
             ))}
 
+            <AnimatedCard>
             <div
               style={{
                 display: 'flex',
@@ -216,18 +221,19 @@ function Contact() {
                     )
                   }
                   whileHover={{
-                    borderColor: 'rgba(0,255,128,0.3)',
-                    color: '#00FF80',
+                    borderColor: 'rgba(37,99,235,0.3)',
+                    color: '#2563EB',
                     y: -2,
                   }}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                    borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
                     borderRadius: '8px',
                     padding: '12px 20px',
                     fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                     fontSize: '12px',
-                    color: 'rgba(255,255,255,0.4)',
+                    color: '#5483B3',
                     cursor: 'pointer',
                   }}
                 >
@@ -235,228 +241,86 @@ function Contact() {
                 </motion.span>
               ))}
             </div>
+            </AnimatedCard>
           </div>
 
           <div
             style={{
-              background: 'rgba(0,255,128,0.02)',
-              border: '1px solid rgba(0,255,128,0.1)',
-              borderRadius: '16px',
-              padding: '32px',
-              position: 'relative',
+              background: '#0a0a0a',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '8px',
+              padding: '24px',
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '14px',
+              color: '#fff',
+              minHeight: '400px',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <AnimatePresence mode="wait">
-              {!submitted ? (
-                <motion.form
-                  key="form"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  onSubmit={handleSubmit}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '6px',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: '10px',
-                        height: '10px',
-                        borderRadius: '50%',
-                        background: '#FF5F57',
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: '10px',
-                        height: '10px',
-                        borderRadius: '50%',
-                        background: '#FFBD2E',
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: '10px',
-                        height: '10px',
-                        borderRadius: '50%',
-                        background: '#28CA41',
-                      }}
-                    />
-                  </div>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
+              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ff5f57' }} />
+              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#ffbd2e' }} />
+              <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#28c840' }} />
+            </div>
 
-                  <div
-                    style={{
-                      fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                      fontSize: '13px',
-                      color: 'rgba(0,255,128,0.5)',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    $ send --message
-                  </div>
-
-                  <div style={{ marginBottom: '20px' }}>
-                    <label
-                      htmlFor="name"
-                      style={{
-                        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                        fontSize: '11px',
-                        color: 'rgba(0,255,128,0.4)',
-                        letterSpacing: '1px',
-                        marginBottom: '8px',
-                        display: 'block',
-                      }}
-                    >
-                      {'> your_name:'}
-                    </label>
-                    <input
-                      id="name"
-                      ref={nameInputRef}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your Name"
-                      required
-                      style={inputStyle}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(0,255,128,0.3)'
-                        e.currentTarget.style.boxShadow =
-                          '0 0 15px rgba(0,255,128,0.05)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: '20px' }}>
-                    <label
-                      htmlFor="email"
-                      style={{
-                        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                        fontSize: '11px',
-                        color: 'rgba(0,255,128,0.4)',
-                        letterSpacing: '1px',
-                        marginBottom: '8px',
-                        display: 'block',
-                      }}
-                    >
-                      {'> your_email:'}
-                    </label>
-                    <input
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      type="email"
-                      placeholder="hello@example.com"
-                      required
-                      style={inputStyle}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(0,255,128,0.3)'
-                        e.currentTarget.style.boxShadow =
-                          '0 0 15px rgba(0,255,128,0.05)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: '20px' }}>
-                    <label
-                      htmlFor="message"
-                      style={{
-                        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                        fontSize: '11px',
-                        color: 'rgba(0,255,128,0.4)',
-                        letterSpacing: '1px',
-                        marginBottom: '8px',
-                        display: 'block',
-                      }}
-                    >
-                      {'> message:'}
-                    </label>
-                    <textarea
-                      id="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Tell me about your project..."
-                      required
-                      style={{ ...inputStyle, height: '120px', resize: 'none' }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(0,255,128,0.3)'
-                        e.currentTarget.style.boxShadow =
-                          '0 0 15px rgba(0,255,128,0.05)'
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                        e.currentTarget.style.boxShadow = 'none'
-                      }}
-                    />
-                  </div>
-
-                  <motion.button
-                    type="submit"
-                    whileHover={{
-                      boxShadow: '0 0 40px rgba(0,255,128,0.4)',
-                      scale: 1.02,
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    style={{
-                      width: '100%',
-                      marginTop: '8px',
-                      background: '#00FF80',
-                      color: '#000000',
-                      padding: '14px',
-                      borderRadius: '8px',
-                      fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                      fontSize: '14px',
-                      fontWeight: 800,
-                      border: 'none',
-                      cursor: 'pointer',
-                      letterSpacing: '0.5px',
-                      boxShadow: '0 0 25px rgba(0,255,128,0.25)',
-                    }}
-                  >
-                    $ send_message --now
-                  </motion.button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
+            <div style={{ flex: 1, overflowY: 'auto', marginBottom: '12px' }}>
+              {terminalLines.map((line, i) => (
+                <div
+                  key={i}
                   style={{
-                    textAlign: 'center',
-                    padding: '40px',
-                    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                    color: line.startsWith('$')
+                      ? '#7DA0CA'
+                      : line.startsWith('>')
+                        ? '#C1E8FF'
+                        : 'rgba(255,255,255,0.5)',
+                    marginBottom: '4px',
+                    whiteSpace: 'pre-wrap',
                   }}
                 >
-                  <div style={{ color: '#00FF80', fontSize: '48px', marginBottom: '12px' }}>
-                    ✓
-                  </div>
-                  <div
-                    style={{
-                      color: '#ffffff',
-                      fontSize: '20px',
-                      fontWeight: 800,
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Message sent!
-                  </div>
-                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '14px' }}>
-                    I&apos;ll get back to you soon.
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {line}
+                </div>
+              ))}
+            </div>
+
+            {!submitted && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ color: '#7DA0CA' }}>
+                  {currentField === 'name' && '> your_name:'}
+                  {currentField === 'email' && '> your_email:'}
+                  {currentField === 'message' && '> message:'}
+                </span>
+                <input
+                  autoFocus
+                  type={currentField === 'email' ? 'email' : 'text'}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    color: '#fff',
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontSize: '14px',
+                    flex: 1,
+                    caretColor: '#7DA0CA',
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const val = (e.target as HTMLInputElement).value.trim()
+                      if (val) {
+                        handleTerminalSubmit(val)
+                        ;(e.target as HTMLInputElement).value = ''
+                      }
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {submitted && (
+              <div style={{ color: '#28c840', marginTop: '8px' }}>
+                ✓ Message queued. I&apos;ll get back to you soon.
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -465,7 +329,8 @@ function Contact() {
           style={{
             marginTop: '120px',
             paddingTop: '40px',
-            borderTop: '1px solid rgba(255,255,255,0.04)',
+            borderTop: '1px solid transparent',
+            borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -477,7 +342,7 @@ function Contact() {
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '12px',
-              color: 'rgba(255,255,255,0.2)',
+              color: '#5483B3',
             }}
           >
             {'> Bhavesh Patil © 2025'}
@@ -486,7 +351,7 @@ function Contact() {
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '11px',
-              color: 'rgba(0,255,128,0.3)',
+              color: 'rgba(125,160,202,0.3)',
             }}
           >
             Built with React + TypeScript
@@ -495,7 +360,7 @@ function Contact() {
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '11px',
-              color: 'rgba(255,255,255,0.15)',
+              color: '#5483B3',
             }}
           >
             Mumbai, India

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AnimatedButton from './AnimatedButton'
 
 type TerminalLine = {
   text: string
@@ -8,14 +9,14 @@ type TerminalLine = {
 }
 
 const terminalLines: TerminalLine[] = [
-  { text: '$ skills --list', color: 'rgba(0,255,128,0.5)' },
-  { text: 'React, Node.js', color: 'rgba(255,255,255,0.7)' },
-  { text: 'MongoDB, TypeScript', color: 'rgba(255,255,255,0.7)' },
-  { text: 'Python, AI/ML', color: 'rgba(255,255,255,0.7)' },
-  { text: '$ status', color: 'rgba(0,255,128,0.5)' },
-  { text: '● Available for hire', color: '#00FF80' },
-  { text: '$ location', color: 'rgba(0,255,128,0.5)' },
-  { text: 'Panvel, Mumbai IN', color: 'rgba(255,255,255,0.7)' },
+  { text: '$ skills --list', color: 'rgba(125,160,202,0.5)' },
+  { text: 'React, Node.js', color: '#5483B3' },
+  { text: 'MongoDB, TypeScript', color: '#5483B3' },
+  { text: 'Python, AI/ML', color: '#5483B3' },
+  { text: '$ status', color: 'rgba(125,160,202,0.5)' },
+  { text: '● Available for hire', color: '#7DA0CA' },
+  { text: '$ location', color: 'rgba(125,160,202,0.5)' },
+  { text: 'Panvel, Mumbai IN', color: '#5483B3' },
 ]
 
 const techStack = [
@@ -77,8 +78,7 @@ function CountUp({ target, suffix }: { target: string; suffix: string }) {
 
 function Hero() {
   const navigate = useNavigate()
-  const fullText = 'BHAVESH PATIL'
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const fullText = 'Bhavesh B. Patil'
   const width = useWindowWidth()
   const isMobile = width < 768
 
@@ -150,56 +150,6 @@ function Hero() {
   }, [isDeleting, roleIndex, typedRole])
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-  
-    const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    let mouseX = -9999
-    let mouseY = -9999
-
-    const handleMouse = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouseX = e.clientX - rect.left
-      mouseY = e.clientY - rect.top
-    }
-    window.addEventListener('mousemove', handleMouse)
-
-    let animId: number
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const spacing = 40
-      for (let x = 0; x < canvas.width; x += spacing) {
-        for (let y = 0; y < canvas.height; y += spacing) {
-          const dist = Math.sqrt((x - mouseX) ** 2 + (y - mouseY) ** 2)
-          const radius = dist < 120 ? 3 : 1
-          const alpha = dist < 120 ? 0.6 : 0.12
-
-          ctx.beginPath()
-          ctx.arc(x, y, radius, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(0,255,128,${alpha})`
-          ctx.fill()
-        }
-      }
-      animId = requestAnimationFrame(draw)
-    }
-    draw()
-
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('resize', resize)
-      window.removeEventListener('mousemove', handleMouse)
-    }
-  }, [])
-
-  useEffect(() => {
     const interval = window.setInterval(() => {
       setVisibleLines((prev) => {
         if (prev >= terminalLines.length) {
@@ -244,25 +194,12 @@ function Hero() {
           }
         `}
       </style>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
       <div
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 0,
-          backgroundImage:
-            'repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 2px)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}
       />
@@ -275,7 +212,7 @@ function Hero() {
           top: '-200px',
           right: '-200px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,255,128,0.06), transparent 70%)',
+          background: 'transparent',
           filter: 'blur(60px)',
           pointerEvents: 'none',
         }}
@@ -289,7 +226,7 @@ function Hero() {
           bottom: '-100px',
           left: '-100px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,255,128,0.04), transparent 70%)',
+          background: 'transparent',
           filter: 'blur(40px)',
           pointerEvents: 'none',
         }}
@@ -301,9 +238,7 @@ function Hero() {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage:
-            'linear-gradient(rgba(0,255,128,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,128,0.03) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+          background: 'transparent',
           pointerEvents: 'none',
         }}
       />
@@ -327,7 +262,7 @@ function Hero() {
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '14px',
-            color: 'rgba(0,255,128,0.6)',
+            color: 'rgba(125,160,202,0.6)',
             marginBottom: '24px',
             display: 'flex',
             alignItems: 'center',
@@ -341,7 +276,7 @@ function Hero() {
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              background: '#00FF80',
+              background: 'transparent',
             }}
           />
           <span>{typedWhoAmI}</span>
@@ -349,6 +284,7 @@ function Hero() {
 
         <motion.div style={{ marginBottom: '16px' }} transition={{ delay: 1 * 0.1 }}>
           <div
+            className="gradient-heading-text"
             style={{
               fontSize: 'clamp(52px, 8vw, 96px)',
               fontWeight: 900,
@@ -361,11 +297,6 @@ function Hero() {
               <span
                 key={i}
                 style={{
-                  color: i < 7 ? '#ffffff' : '#00FF80',
-                  textShadow:
-                    i >= 7
-                      ? '0 0 40px rgba(0,255,128,0.5), 0 0 80px rgba(0,255,128,0.2)'
-                      : 'none',
                   display: 'inline',
                 }}
               >
@@ -374,9 +305,7 @@ function Hero() {
             ))}
             <span
               style={{
-                color: '#00FF80',
                 opacity: showCursor ? 1 : 0,
-                textShadow: '0 0 40px rgba(0,255,128,0.5)',
                 transition: 'opacity 0.1s',
                 display: 'inline',
               }}
@@ -391,7 +320,7 @@ function Hero() {
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '18px',
-            color: 'rgba(255,255,255,0.5)',
+            color: '#5483B3',
             marginBottom: '32px',
             marginTop: '12px',
             display: 'flex',
@@ -403,7 +332,7 @@ function Hero() {
             style={{
               width: '32px',
               height: '1px',
-              background: 'linear-gradient(90deg, #00FF80, transparent)',
+              background: 'transparent',
             }}
           />
           <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
@@ -411,7 +340,7 @@ function Hero() {
             <motion.span
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 0.8, repeat: Infinity }}
-              style={{ color: '#00FF80', marginLeft: '2px' }}
+              style={{ color: '#7DA0CA', marginLeft: '2px' }}
             >
               |
             </motion.span>
@@ -424,7 +353,7 @@ function Hero() {
           transition={{ delay: 1.5 + 3 * 0.1 }}
           style={{
             fontSize: '16px',
-            color: 'rgba(255,255,255,0.4)',
+            color: '#5483B3',
             lineHeight: 1.7,
             maxWidth: '500px',
             marginBottom: '44px',
@@ -446,92 +375,13 @@ function Hero() {
             alignItems: isMobile ? 'flex-start' : 'center',
           }}
         >
-          <motion.button
-            onClick={() => navigate('/projects')}
-            onMouseEnter={() => {
-              const ctx = new AudioContext()
-              const osc = ctx.createOscillator()
-              const gain = ctx.createGain()
-              osc.connect(gain)
-              gain.connect(ctx.destination)
-              osc.frequency.value = 800
-              osc.type = 'sine'
-              gain.gain.setValueAtTime(0.05, ctx.currentTime)
-              gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
-              osc.start()
-              osc.stop(ctx.currentTime + 0.1)
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.7 }}
-            whileHover={{
-              scale: 1.04,
-              y: -2,
-              boxShadow: '0 0 50px rgba(0,255,128,0.5)',
-            }}
-            whileTap={{ scale: 0.97 }}
-            style={{
-              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-              background: '#00FF80',
-              color: '#000000',
-              padding: '13px 28px',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: 800,
-              border: 'none',
-              cursor: 'pointer',
-              letterSpacing: '0.5px',
-              boxShadow: '0 0 30px rgba(0,255,128,0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              width: isMobile ? '100%' : 'auto',
-              justifyContent: isMobile ? 'center' : 'flex-start',
-            }}
-          >
+          <AnimatedButton onClick={() => navigate('/projects')}>
             ./view_work
-          </motion.button>
+          </AnimatedButton>
 
-          <motion.button
-            onClick={() => navigate('/contact')}
-            onMouseEnter={() => {
-              const ctx = new AudioContext()
-              const osc = ctx.createOscillator()
-              const gain = ctx.createGain()
-              osc.connect(gain)
-              gain.connect(ctx.destination)
-              osc.frequency.value = 800
-              osc.type = 'sine'
-              gain.gain.setValueAtTime(0.05, ctx.currentTime)
-              gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
-              osc.start()
-              osc.stop(ctx.currentTime + 0.1)
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.8 }}
-            whileHover={{
-              background: 'rgba(0,255,128,0.08)',
-              borderColor: '#00FF80',
-              boxShadow: '0 0 20px rgba(0,255,128,0.15)',
-              y: -2,
-            }}
-            style={{
-              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-              background: 'transparent',
-              border: '1px solid rgba(0,255,128,0.3)',
-              color: '#00FF80',
-              padding: '13px 28px',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              letterSpacing: '0.5px',
-              width: isMobile ? '100%' : 'auto',
-            }}
-          >
+          <AnimatedButton onClick={() => navigate('/contact')}>
             ./contact_me
-          </motion.button>
+          </AnimatedButton>
         </motion.div>
 
         <motion.div
@@ -558,7 +408,7 @@ function Hero() {
             >
               <span
                 style={{
-                  color: 'rgba(0,255,128,0.4)',
+                  color: 'rgba(125,160,202,0.4)',
                   fontSize: '12px',
                   letterSpacing: '1px',
                   padding: '4px 0',
@@ -567,7 +417,7 @@ function Hero() {
                 {item}
               </span>
               {index < techStack.length - 1 && (
-                <span style={{ color: 'rgba(255,255,255,0.1)', padding: '0 4px' }}>
+                <span style={{ color: '#5483B3', padding: '0 4px' }}>
                   ·
                 </span>
               )}
@@ -581,7 +431,8 @@ function Hero() {
             display: 'flex',
             gap: isMobile ? '24px' : 0,
             paddingTop: '40px',
-            borderTop: '1px solid rgba(0,255,128,0.08)',
+            borderTop: '1px solid transparent',
+            borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
             flexWrap: isMobile ? 'wrap' : 'nowrap',
           }}
         >
@@ -598,7 +449,7 @@ function Hero() {
                 borderRight:
                   index === stats.length - 1
                     ? 'none'
-                    : '1px solid rgba(0,255,128,0.08)',
+                    : '1px solid transparent',
                 marginBottom: isMobile ? '20px' : 0,
               }}
             >
@@ -607,8 +458,8 @@ function Hero() {
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: '36px',
                   fontWeight: 900,
-                  color: '#00FF80',
-                  textShadow: '0 0 20px rgba(0,255,128,0.4)',
+                  color: '#7DA0CA',
+                  textShadow: '0 0 20px rgba(125,160,202,0.4)',
                 }}
               >
                 <CountUp target={stat.target} suffix={stat.suffix} />
@@ -617,7 +468,7 @@ function Hero() {
                 style={{
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: '11px',
-                  color: 'rgba(255,255,255,0.25)',
+                  color: '#5483B3',
                   letterSpacing: '2px',
                   textTransform: 'uppercase',
                   marginTop: '4px',
@@ -645,13 +496,14 @@ function Hero() {
               right: '6%',
               top: '50%',
               transform: 'translateY(-50%)',
-              background: 'rgba(0,255,128,0.03)',
-              border: '1px solid rgba(0,255,128,0.12)',
+              background: 'transparent',
+              border: '1px solid transparent',
+              borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
               borderRadius: '12px',
               padding: '24px',
               width: '320px',
               backdropFilter: 'blur(10px)',
-              boxShadow: '0 0 40px rgba(0,255,128,0.05)',
+              boxShadow: '0 0 40px rgba(125,160,202,0.05)',
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               zIndex: 2,
             }}
@@ -705,7 +557,7 @@ function Hero() {
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 0.8, repeat: Infinity }}
-                style={{ fontWeight: 700, color: '#00FF80' }}
+                style={{ fontWeight: 700, color: '#7DA0CA' }}
               >
                 _
               </motion.span>

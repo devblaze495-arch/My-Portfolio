@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import SpotlightCard from './SpotlightCard/SpotlightCard'
+import AnimatedCard from './AnimatedCard'
 
 type Project = {
   id: number
@@ -19,7 +19,7 @@ const projects: Project[] = [
     tag: 'Web App',
     desc: 'Built a full grocery store website for a local shop in Panvel. WhatsApp ordering, product catalog, Google Maps, mobile-first.',
     tech: ['React', 'Node.js', 'MongoDB'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'food-market',
   },
   {
@@ -28,7 +28,7 @@ const projects: Project[] = [
     tag: 'AI / ML',
     desc: 'AI model that detects crop diseases from phone photos. Helps farmers get instant diagnosis without visiting an expert.',
     tech: ['Python', 'TensorFlow', 'React'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'crop-disease-app',
   },
   {
@@ -37,7 +37,7 @@ const projects: Project[] = [
     tag: 'Full Stack',
     desc: 'Full clone of Google Classroom with assignments, grading, student/teacher roles and real-time updates.',
     tech: ['React', 'Node.js', 'MongoDB'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'classroom-clone',
   },
   {
@@ -46,7 +46,7 @@ const projects: Project[] = [
     tag: 'Security',
     desc: 'Visitor management system with QR code scanning, entry logs and admin dashboard. Built for secure premises.',
     tech: ['React', 'Node.js', 'MongoDB'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'safeentry-pro',
   },
   {
@@ -55,7 +55,7 @@ const projects: Project[] = [
     tag: 'Full Stack',
     desc: 'End-to-end complaint tracking platform. Users raise tickets, admins resolve them. Status updates in real time.',
     tech: ['React', 'Node.js', 'MongoDB'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'complaint-system',
   },
   {
@@ -64,7 +64,7 @@ const projects: Project[] = [
     tag: 'AI / ML',
     desc: 'AI tool that reads resumes and ranks candidates automatically based on job requirements. Saves hours of manual screening.',
     tech: ['Python', 'NLP', 'React'],
-    color: '#00FF80',
+    color: '#7DA0CA',
     cmd: 'resume-screener',
   },
 ]
@@ -85,7 +85,7 @@ function Projects() {
     <section
       id="projects"
       style={{
-        background: '#050505',
+        background: 'transparent',
         padding: '120px 6%',
         position: 'relative',
         overflow: 'hidden',
@@ -100,7 +100,7 @@ function Projects() {
           width: '800px',
           height: '400px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(0,255,128,0.03), transparent 70%)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}
       />
@@ -120,7 +120,7 @@ function Projects() {
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '13px',
-            color: 'rgba(0,255,128,0.5)',
+            color: 'rgba(125,160,202,0.5)',
             marginBottom: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -135,17 +135,17 @@ function Projects() {
             style={{
               width: '3px',
               height: '40px',
-              background: 'linear-gradient(#00FF80, transparent)',
+              background: 'transparent',
               borderRadius: '2px',
               marginRight: '16px',
               flexShrink: 0,
             }}
           />
           <h2
+            className="gradient-heading-text"
             style={{
               fontSize: 'clamp(32px,5vw,52px)',
               fontWeight: 900,
-              color: '#ffffff',
               letterSpacing: '-2px',
               display: 'flex',
               alignItems: 'center',
@@ -156,7 +156,7 @@ function Projects() {
             My Work
             <span
               style={{
-                color: '#00FF80',
+                color: '#7DA0CA',
                 fontSize: '16px',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontWeight: 400,
@@ -188,17 +188,14 @@ function Projects() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1, duration: 0.5, type: 'spring', stiffness: 300, damping: 20 }}
+            onMouseEnter={() => setHoveredId(project.id)}
+            onMouseLeave={() => setHoveredId(null)}
+            onMouseMove={(e) => {
+              setPreviewX(e.clientX)
+              setPreviewY(e.clientY)
+            }}
           >
-            <SpotlightCard
-              spotlightColor="rgba(0, 255, 128, 0.12)"
-              className="project-card"
-              onMouseEnter={() => setHoveredId(project.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onMouseMove={(e) => {
-                setPreviewX(e.clientX)
-                setPreviewY(e.clientY)
-              }}
-            >
+            <AnimatedCard className="project-card">
               <div
                 style={{
                   position: 'absolute',
@@ -206,7 +203,7 @@ function Projects() {
                   left: 0,
                   right: 0,
                   height: '1px',
-                  background: `linear-gradient(90deg, transparent, ${project.color}, transparent)`,
+                  background: 'transparent',
                   opacity: hoveredId === project.id ? 1 : 0,
                   transition: 'opacity 0.3s',
                 }}
@@ -226,7 +223,7 @@ function Projects() {
                   style={{
                     fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                     fontSize: '12px',
-                    color: 'rgba(0,255,128,0.4)',
+                    color: 'rgba(125,160,202,0.4)',
                     marginBottom: '8px',
                   }}
                 >
@@ -236,7 +233,7 @@ function Projects() {
                   style={{
                     fontSize: '20px',
                     fontWeight: 800,
-                    color: '#ffffff',
+                    color: '#C1E8FF',
                     letterSpacing: '-0.5px',
                     margin: 0,
                   }}
@@ -246,9 +243,10 @@ function Projects() {
               </div>
               <span
                 style={{
-                  background: 'rgba(0,255,128,0.08)',
-                  border: '1px solid rgba(0,255,128,0.15)',
-                  color: '#00FF80',
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                  borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
+                  color: '#7DA0CA',
                   fontSize: '11px',
                   fontWeight: 700,
                   padding: '4px 12px',
@@ -265,7 +263,7 @@ function Projects() {
             <p
               style={{
                 fontSize: '14px',
-                color: 'rgba(255,255,255,0.4)',
+                color: '#5483B3',
                 lineHeight: 1.7,
                 marginBottom: '24px',
               }}
@@ -285,9 +283,10 @@ function Projects() {
                 <span
                   key={tech}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    color: 'rgba(255,255,255,0.35)',
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                    borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
+                    color: '#5483B3',
                     fontSize: '11px',
                     fontWeight: 600,
                     padding: '4px 10px',
@@ -306,14 +305,15 @@ function Projects() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   paddingTop: '20px',
-                  borderTop: '1px solid rgba(255,255,255,0.04)',
+                  borderTop: '1px solid transparent',
+                  borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
                 }}
               >
                 <span
                   style={{
                     fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                     fontSize: '12px',
-                    color: 'rgba(0,255,128,0.5)',
+                    color: 'rgba(37,99,235,0.8)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
@@ -326,13 +326,13 @@ function Projects() {
                 style={{
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: '11px',
-                  color: 'rgba(255,255,255,0.1)',
+                  color: '#5483B3',
                 }}
               >
                 {`0${index + 1}`}
               </span>
               </div>
-            </SpotlightCard>
+            </AnimatedCard>
           </motion.div>
         ))}
       </motion.div>
@@ -346,7 +346,8 @@ function Projects() {
           textAlign: 'center',
           marginTop: '64px',
           paddingTop: '48px',
-          borderTop: '1px solid rgba(0,255,128,0.06)',
+          borderTop: '1px solid transparent',
+          borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
           position: 'relative',
           zIndex: 1,
         }}
@@ -355,7 +356,7 @@ function Projects() {
           style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: '13px',
-            color: 'rgba(255,255,255,0.25)',
+            color: '#5483B3',
             marginBottom: '20px',
           }}
         >
@@ -375,8 +376,9 @@ function Projects() {
               left: `${previewX + 20}px`,
               width: '200px',
               height: '120px',
-              background: 'rgba(0,255,128,0.05)',
-              border: '1px solid rgba(0,255,128,0.2)',
+              background: 'transparent',
+              border: '1px solid transparent',
+              borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
               borderRadius: '8px',
               zIndex: 9997,
               backdropFilter: 'blur(10px)',
@@ -388,10 +390,10 @@ function Projects() {
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             }}
           >
-            <div style={{ fontSize: '18px', fontWeight: 800, color: '#00FF80', lineHeight: 1.2 }}>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: '#7DA0CA', lineHeight: 1.2 }}>
               {projects.find((p) => p.id === hoveredId)?.title}
             </div>
-            <div style={{ fontSize: '13px', color: 'rgba(0,255,128,0.7)' }}>
+            <div style={{ fontSize: '13px', color: 'rgba(125,160,202,0.7)' }}>
               {projects.find((p) => p.id === hoveredId)?.tag}
             </div>
           </motion.div>

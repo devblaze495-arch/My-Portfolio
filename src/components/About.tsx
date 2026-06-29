@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import AnimatedCard from './AnimatedCard'
+import AnimatedButton from './AnimatedButton'
 
 const lines = [
   { cmd: true, text: '$ cat about.txt' },
@@ -43,7 +45,7 @@ function About() {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
       style={{
-        background: '#050505',
+        background: 'transparent',
         padding: '120px 6% 80px',
       }}
     >
@@ -56,11 +58,13 @@ function About() {
         }}
       >
         <div>
+          <AnimatedCard>
           <div
             style={{
-              background: 'rgba(0,255,128,0.06)',
-              border: '1px solid rgba(0,255,128,0.15)',
-              color: '#00FF80',
+              background: 'transparent',
+              border: '1px solid transparent',
+              borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
+              color: '#7DA0CA',
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '12px',
               padding: '6px 16px',
@@ -71,12 +75,13 @@ function About() {
           >
             {'// WHO_I_AM'}
           </div>
+          </AnimatedCard>
 
           <h2
+            className="gradient-heading-text"
             style={{
               fontSize: 'clamp(32px,5vw,52px)',
               fontWeight: 900,
-              color: '#ffffff',
               letterSpacing: '-2px',
               marginBottom: '24px',
               marginTop: 0,
@@ -87,7 +92,7 @@ function About() {
 
           <p
             style={{
-              color: 'rgba(255,255,255,0.45)',
+              color: '#5483B3',
               fontSize: '15px',
               lineHeight: 1.8,
               marginBottom: '16px',
@@ -100,7 +105,7 @@ function About() {
 
           <p
             style={{
-              color: 'rgba(255,255,255,0.45)',
+              color: '#5483B3',
               fontSize: '15px',
               lineHeight: 1.8,
               marginBottom: '16px',
@@ -111,36 +116,18 @@ function About() {
             }
           </p>
 
-          <motion.button
-            onClick={() => window.alert('CV coming soon!')}
-            whileHover={{
-              borderColor: '#00FF80',
-              background: 'rgba(0,255,128,0.06)',
-              y: -2,
-            }}
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(0,255,128,0.3)',
-              color: '#00FF80',
-              padding: '12px 24px',
-              borderRadius: '6px',
-              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-              fontSize: '13px',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
+          <AnimatedButton onClick={() => window.alert('CV coming soon!')}>
             {'$ download_cv'}
-          </motion.button>
+          </AnimatedButton>
         </div>
 
+        <AnimatedCard>
         <div
           style={{
             display: isMobile ? 'none' : 'block',
-            background: 'rgba(0,255,128,0.02)',
-            border: '1px solid rgba(0,255,128,0.1)',
+            background: 'transparent',
+            border: '1px solid transparent',
+            borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
             borderRadius: '12px',
             padding: '24px',
             height: 'fit-content',
@@ -184,7 +171,7 @@ function About() {
               <div
                 key={line.text}
                 style={{
-                  color: line.cmd ? 'rgba(0,255,128,0.5)' : 'rgba(255,255,255,0.6)',
+                  color: line.cmd ? 'rgba(125,160,202,0.5)' : '#5483B3',
                   fontSize: '13px',
                   fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   marginBottom: '8px',
@@ -197,7 +184,7 @@ function About() {
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 0.8, repeat: Infinity }}
               style={{
-                color: '#00FF80',
+                color: '#7DA0CA',
                 fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               }}
             >
@@ -205,6 +192,7 @@ function About() {
             </motion.span>
           </div>
         </div>
+        </AnimatedCard>
       </div>
     </motion.section>
   )

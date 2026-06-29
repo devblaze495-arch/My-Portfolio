@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { useRef, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import AnimatedButton from './AnimatedButton'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -11,9 +11,6 @@ const navLinks = [
 
 function Navbar() {
   const navigate = useNavigate()
-  const [btnX, setBtnX] = useState(0)
-  const [btnY, setBtnY] = useState(0)
-  const btnRef = useRef<HTMLButtonElement | null>(null)
 
   return (
     <motion.nav
@@ -27,9 +24,10 @@ function Navbar() {
         right: 0,
         zIndex: 1000,
         height: '60px',
-        background: 'rgba(5,5,5,0.9)',
+        background: 'linear-gradient(180deg, #000000 0%, transparent 100%)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(0,255,128,0.1)',
+        borderBottom: '1px solid transparent',
+        borderImage: 'linear-gradient(135deg, #5483B3, #7DA0CA) 1',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -42,7 +40,7 @@ function Navbar() {
           fontFamily: "'JetBrains Mono', ui-monospace, monospace",
           fontSize: '18px',
           fontWeight: 700,
-          color: '#00FF80',
+          color: '#2563EB',
           textDecoration: 'none',
         }}
       >
@@ -71,21 +69,21 @@ function Navbar() {
             style={({ isActive }) => ({
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: '13px',
-              color: isActive ? '#00FF80' : 'rgba(255,255,255,0.4)',
+              color: isActive ? '#2563EB' : '#5483B3',
               textDecoration: 'none',
               padding: '6px 14px',
               borderRadius: '4px',
               letterSpacing: '1px',
               border: isActive
-                ? '1px solid rgba(0,255,128,0.15)'
+                ? '1px solid rgba(37,99,235,0.15)'
                 : '1px solid transparent',
-              background: isActive ? 'rgba(0,255,128,0.06)' : 'transparent',
+              background: isActive ? 'rgba(37,99,235,0.06)' : 'transparent',
               transition: 'all 0.2s ease',
             })}
           >
             <motion.span
               whileHover={{
-                color: '#00FF80',
+                color: '#2563EB',
               }}
               style={{ display: 'inline-block' }}
             >
@@ -95,47 +93,9 @@ function Navbar() {
         ))}
       </div>
 
-      <motion.div
-        animate={{ x: btnX, y: btnY }}
-        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-      >
-        <motion.button
-          ref={btnRef}
-          onClick={() => navigate('/contact')}
-          onMouseMove={(e) => {
-            if (!btnRef.current) return
-            const rect = btnRef.current.getBoundingClientRect()
-            const x = e.clientX - rect.left - rect.width / 2
-            const y = e.clientY - rect.top - rect.height / 2
-            setBtnX(x * 0.3)
-            setBtnY(y * 0.3)
-          }}
-          onMouseLeave={() => {
-            setBtnX(0)
-            setBtnY(0)
-          }}
-          whileHover={{
-            background: 'rgba(0,255,128,0.1)',
-            boxShadow: '0 0 25px rgba(0,255,128,0.3)',
-          }}
-          whileTap={{ scale: 0.97 }}
-          style={{
-            background: 'transparent',
-            border: '1px solid #00FF80',
-            color: '#00FF80',
-            padding: '8px 20px',
-            borderRadius: '6px',
-            fontSize: '13px',
-            fontWeight: 700,
-            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            boxShadow: '0 0 15px rgba(0,255,128,0.15)',
-          }}
-        >
-          HIRE ME
-        </motion.button>
-      </motion.div>
+      <AnimatedButton onClick={() => navigate('/contact')}>
+        HIRE ME
+      </AnimatedButton>
     </motion.nav>
   )
 }

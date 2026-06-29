@@ -1,6 +1,9 @@
 * {
   margin: 0;
   padding: 0;
+}
+
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -8,16 +11,18 @@ html {
   scroll-behavior: smooth;
 }
 
+body, #root {
+  background: #000000;
+  min-height: 100vh;
+}
+
 body {
-  background: #050505;
-  color: #ffffff;
-  font-family: 'Inter', system-ui, sans-serif;
-  overflow-x: hidden;
+  cursor: none;
 }
 
 ::selection {
-  background: rgba(0, 255, 128, 0.2);
-  color: #00ff80;
+  background: rgba(125, 160, 202, 0.2);
+  color: #7DA0CA;
 }
 
 ::-webkit-scrollbar {
@@ -25,10 +30,30 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: linear-gradient(135deg, #021024 0%, #052659 50%, #021024 100%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00ff80;
+  background: linear-gradient(135deg, #5483B3 0%, #7DA0CA 100%);
   border-radius: 2px;
+}
+
+.gradient-heading-text {
+  background: linear-gradient(135deg, #7DA0CA 0%, #C1E8FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-card-bg {
+  background: linear-gradient(135deg, #021024 0%, #052659 100%);
+}
+
+.gradient-button-bg {
+  background: linear-gradient(135deg, #052659 0%, #5483B3 100%);
+}
+
+.gradient-border {
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, #5483B3, #7DA0CA) 1;
 }
